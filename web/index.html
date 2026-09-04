@@ -205,7 +205,7 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
   <h2>Welcome back, <span>Admin</span></h2>
   <div class="balance-card">
     <span class="badge badge-active">ACTIVE</span>
-    <span class="amt">&#8734; Unlimited</span>
+    <span class="amt">$999,999,999</span>
   </div>
 </div>
 
@@ -237,12 +237,12 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
     <form onsubmit="return generateKey('sdk',event)">
       <div class="form-row three">
         <div>
-          <label>Game</label>
+          <label>Select Game</label>
           <select id="sdkGame">
+            <option value="BGMI" selected>BGMI</option>
             <option value="PUBG Mobile">PUBG Mobile</option>
-            <option value="BGMI">BGMI</option>
+            <option value="PUBG Global">PUBG Global</option>
             <option value="Free Fire">Free Fire</option>
-            <option value="Global">Global</option>
           </select>
         </div>
         <div>
@@ -307,8 +307,13 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
     <form onsubmit="return generateKey('panel',event)">
       <div class="form-row three">
         <div>
-          <label>Label</label>
-          <input type="text" id="panelLabel" placeholder="e.g. Admin Panel Access" required>
+          <label>Select Game</label>
+          <select id="panelLabel">
+            <option value="BGMI" selected>BGMI</option>
+            <option value="PUBG Mobile">PUBG Mobile</option>
+            <option value="PUBG Global">PUBG Global</option>
+            <option value="Free Fire">Free Fire</option>
+          </select>
         </div>
         <div>
           <label>Max Devices</label>

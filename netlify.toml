@@ -1,2 +1,8 @@
 [build]
   publish = "web"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/connect"
+  to = "/.netlify/functions/connect"
+  status = 200
