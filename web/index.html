@@ -1,465 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DARK BHAI</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DARK BHAI - License Manager</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07070d;--bg2:#0e0e1a;--glass:rgba(15,15,30,0.65);
+  --glass-border:rgba(255,255,255,0.06);
+  --accent:#8b5cf6;--accent2:#a78bfa;--accent-glow:rgba(139,92,246,0.35);
+  --neon:#00f0ff;--neon-glow:rgba(0,240,255,0.25);
+  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;--pink:#ec4899;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --radius:16px;--radius-sm:10px;
+}
+html{font-size:14px}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* particles */
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.particle{position:absolute;border-radius:50%;background:rgba(139,92,246,0.4);animation:float linear infinite}
+@keyframes float{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translateY(-10vh) scale(1);opacity:0}
+}
+
+.app{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:16px}
+@media(min-width:768px){.app{padding:24px 32px}}
+
+/* glass card */
+.glass{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:var(--radius);padding:24px;transition:border-color .3s,box-shadow .3s}
+.glass:hover{border-color:rgba(139,92,246,0.2);box-shadow:0 0 24px rgba(139,92,246,0.08)}
+
+/* header */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--glass-border)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--neon));display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 20px var(--accent-glow)}
+.brand h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px var(--neon-glow)}
+.brand small{display:block;font-size:.7rem;color:var(--text3);-webkit-text-fill-color:var(--text3);text-transform:uppercase;letter-spacing:2px}
+.header-right{display:flex;align-items:center;gap:12px}
+
+/* buttons */
+.btn{padding:10px 20px;border:none;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#7c3aed);color:#fff;box-shadow:0 4px 16px var(--accent-glow)}
+.btn-accent:hover{transform:translateY(-2px);box-shadow:0 6px 24px var(--accent-glow)}
+.btn-neon{background:linear-gradient(135deg,#0ea5e9,var(--neon));color:#000;font-weight:700;box-shadow:0 4px 16px var(--neon-glow)}
+.btn-neon:hover{transform:translateY(-2px);box-shadow:0 6px 28px var(--neon-glow)}
+.btn-danger{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.25)}
+.btn-danger:hover{background:rgba(239,68,68,0.2)}
+.btn-sm{padding:6px 12px;font-size:.75rem}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--glass-border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--accent)}
+
+/* welcome banner */
+.welcome{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:24px}
+.welcome h2{font-size:1.3rem;font-weight:700}
+.welcome h2 span{color:var(--accent2)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.badge-active{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.3)}
+.badge-active::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.balance-card{display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:var(--radius-sm);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15)}
+.balance-card .amt{font-size:1.1rem;font-weight:800;color:var(--neon)}
+
+/* stats grid */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
+@media(min-width:640px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{text-align:center;padding:20px 12px}
+.stat .num{font-size:1.8rem;font-weight:800;margin-bottom:4px}
+.stat .lbl{font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+
+/* countdown */
+.countdown{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.cd-block{flex:1;min-width:70px;text-align:center;padding:16px 8px;border-radius:var(--radius-sm);background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.1)}
+.cd-block .cd-num{font-size:1.5rem;font-weight:800;color:var(--accent2);font-variant-numeric:tabular-nums}
+.cd-block .cd-lbl{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+
+/* forms */
+.form-row{display:grid;gap:16px}
+@media(min-width:640px){.form-row{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.form-row.three{grid-template-columns:1fr 1fr 1fr}}
+label{display:block;font-size:.75rem;color:var(--text2);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+input,select{width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--glass-border);border-radius:var(--radius-sm);color:var(--text);font-size:.85rem;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+select option{background:#111;color:var(--text)}
+
+/* toggle */
+.toggle-row{display:flex;align-items:center;gap:12px;margin:16px 0}
+.toggle{position:relative;width:48px;height:26px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0}
+.toggle .slider{position:absolute;inset:0;background:rgba(255,255,255,0.08);border-radius:26px;transition:.3s}
+.toggle .slider::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#555;border-radius:50%;transition:.3s}
+.toggle input:checked+.slider{background:var(--accent)}
+.toggle input:checked+.slider::before{transform:translateX(22px);background:#fff}
+.toggle-label{font-size:.8rem;color:var(--text2)}
+.custom-key-input{display:none;margin-top:8px}
+.custom-key-input.show{display:block}
+
+/* table */
+.table-wrap{overflow-x:auto;margin-top:16px}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+thead th{text-align:left;padding:10px 12px;color:var(--text3);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--glass-border)}
+tbody td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle}
+tbody tr:hover{background:rgba(139,92,246,0.04)}
+.key-cell{font-family:'Courier New',monospace;color:var(--accent2);font-size:.78rem;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.key-cell.masked{color:var(--text3)}
+.tag{padding:2px 8px;border-radius:8px;font-size:.65rem;font-weight:600}
+.tag-pubg{background:rgba(245,158,11,0.12);color:var(--yellow)}
+.tag-bgmi{background:rgba(236,72,153,0.12);color:var(--pink)}
+.tag-ff{background:rgba(239,68,68,0.12);color:var(--red)}
+.tag-global{background:rgba(0,240,255,0.12);color:var(--neon)}
+.search-bar{position:relative;margin-bottom:12px}
+.search-bar input{padding-left:36px}
+.search-bar::before{content:'\1F50D';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.85rem;pointer-events:none}
+.empty{padding:40px;text-align:center;color:var(--text3)}
+.empty .ico{font-size:2.5rem;margin-bottom:12px;opacity:.3}
+
+/* footer */
+.footer{text-align:center;padding:32px 0 16px;color:var(--text3);font-size:.7rem;border-top:1px solid var(--glass-border);margin-top:40px}
+
+/* toast */
+.toast{position:fixed;top:20px;right:20px;padding:12px 22px;border-radius:var(--radius-sm);font-size:.82rem;font-weight:600;z-index:9999;animation:slideIn .3s ease;box-shadow:0 8px 32px rgba(0,0,0,0.5)}
+.toast-ok{background:var(--green);color:#fff}
+.toast-err{background:var(--red);color:#fff}
+@keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+</style>
 </head>
 <body>
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-brand">&#128377; DARK BHAI</div>
-        <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
+
+<canvas id="particles"></canvas>
+
+<div class="app">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="brand">
+    <div class="brand-icon">&#128737;</div>
+    <div>
+      <h1>DARK BHAI</h1>
+      <small>License Management System</small>
     </div>
-    <nav class="sidebar-nav">
-        <a href="#" class="nav-item active" data-view="sdkKeys" onclick="switchView('sdkKeys')">
-            <span class="nav-icon">&#128273;</span> SDK Keys
-        </a>
-        <a href="#" class="nav-item" data-view="panelKeys" onclick="switchView('panelKeys')">
-            <span class="nav-icon">&#128100;</span> Panel Keys
-        </a>
-    </nav>
-</aside>
+  </div>
+  <div class="header-right">
+    <button class="btn btn-ghost btn-sm" onclick="exportKeys()">&#128228; Export</button>
+  </div>
+</div>
 
-<div class="container">
-    <header>
-        <div class="header-left">
-            <button class="hamburger" onclick="toggleSidebar()" aria-label="Open menu">&#9776;</button>
-            <div>
-                <h1>DARK BHAI</h1>
-                <div class="subtitle">Generate, manage & revoke keys &mdash; dominate the game</div>
-            </div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:center;">
-            <button class="btn btn-primary" style="width:auto;" onclick="loadCurrentView()">Refresh</button>
-        </div>
-    </header>
+<!-- WELCOME -->
+<div class="welcome">
+  <h2>Welcome back, <span>Admin</span></h2>
+  <div class="balance-card">
+    <span class="badge badge-active">ACTIVE</span>
+    <span class="amt">$999,999,999</span>
+    <span style="color:var(--text3);font-size:.75rem">/ Unlimited</span>
+  </div>
+</div>
 
-    <div class="stats" id="sdkStats">
-        <div class="stat-card">
-            <div class="number" id="totalKeys">0</div>
-            <div class="label">Total Keys</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="activeKeys" style="color:var(--success)">0</div>
-            <div class="label">Active</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="revokedKeys" style="color:var(--danger)">0</div>
-            <div class="label">Revoked</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="totalDevices" style="color:var(--warning)">0</div>
-            <div class="label">Devices</div>
-        </div>
+<!-- STATS -->
+<div class="stats">
+  <div class="glass stat">
+    <div class="num" id="sTotal" style="color:var(--accent2)">0</div>
+    <div class="lbl">Total Keys</div>
+  </div>
+  <div class="glass stat">
+    <div class="num" id="sActive" style="color:var(--green)">0</div>
+    <div class="lbl">Active Keys</div>
+  </div>
+  <div class="glass stat">
+    <div class="num" id="sInactive" style="color:var(--red)">0</div>
+    <div class="lbl">Inactive Keys</div>
+  </div>
+  <div class="glass stat">
+    <div class="num" id="sUsers" style="color:var(--neon)">0</div>
+    <div class="lbl">Total Users</div>
+  </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown">
+  <div class="cd-block"><div class="cd-num" id="cdDays">--</div><div class="cd-lbl">Days</div></div>
+  <div class="cd-block"><div class="cd-num" id="cdHours">--</div><div class="cd-lbl">Hours</div></div>
+  <div class="cd-block"><div class="cd-num" id="cdMins">--</div><div class="cd-lbl">Minutes</div></div>
+  <div class="cd-block"><div class="cd-num" id="cdSecs">--</div><div class="cd-lbl">Seconds</div></div>
+  <div class="glass" style="flex:2;display:flex;align-items:center;justify-content:center;min-width:180px">
+    <span style="font-size:.8rem;color:var(--text2)">Subscription Status &mdash; <span style="color:var(--green);font-weight:700">ACTIVE</span></span>
+  </div>
+</div>
+
+<!-- GENERATOR -->
+<div class="glass" style="margin-bottom:24px">
+  <h2 style="font-size:1rem;margin-bottom:18px;display:flex;align-items:center;gap:8px">&#128273; License Generator</h2>
+  <form id="genForm" onsubmit="return generateKey(event)">
+    <div class="form-row three">
+      <div>
+        <label>Game</label>
+        <select id="fGame">
+          <option value="PUBG Mobile">PUBG Mobile</option>
+          <option value="BGMI">BGMI</option>
+          <option value="Free Fire">Free Fire</option>
+          <option value="Global">Global</option>
+        </select>
+      </div>
+      <div>
+        <label>Max Devices</label>
+        <input type="number" id="fDevices" value="5" min="1" max="100" required>
+      </div>
+      <div>
+        <label>Duration</label>
+        <select id="fDuration">
+          <option value="0.083">2 Hours</option>
+          <option value="0.208">5 Hours</option>
+          <option value="0.5">12 Hours</option>
+          <option value="1">1 Day</option>
+          <option value="3">3 Days</option>
+          <option value="7">7 Days</option>
+          <option value="14">14 Days</option>
+          <option value="15">15 Days</option>
+          <option value="30" selected>30 Days</option>
+          <option value="60">60 Days</option>
+          <option value="lifetime">Lifetime</option>
+        </select>
+      </div>
     </div>
 
-    <div class="stats" id="panelStats" style="display:none;">
-        <div class="stat-card">
-            <div class="number" id="panelTotal">0</div>
-            <div class="label">Panel Keys</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="panelLifetime" style="color:var(--success)">0</div>
-            <div class="label">Lifetime</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="panelExpiring" style="color:var(--warning)">0</div>
-            <div class="label">Expiring</div>
-        </div>
-        <div class="stat-card">
-            <div class="number" id="panelActive" style="color:var(--accent)">0</div>
-            <div class="label">Active Now</div>
-        </div>
+    <div class="toggle-row">
+      <label class="toggle">
+        <input type="checkbox" id="fCustomToggle" onchange="toggleCustomKey()">
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">Custom Key</span>
+    </div>
+    <div class="custom-key-input" id="customKeyWrap">
+      <label>Enter Custom Key</label>
+      <input type="text" id="fCustomKey" placeholder="Type your custom key name...">
     </div>
 
-    <div class="main-content">
-        <!-- SDK KEYS VIEW -->
-        <div id="view-sdkKeys">
-            <div class="panel">
-                <h2>Generate New SDK Key</h2>
-                <form id="createForm" onsubmit="return createKey(event)">
-                    <div class="form-group">
-                        <label>Label</label>
-                        <input type="text" id="label" placeholder="e.g. Client App v2" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Duration</label>
-                        <select id="duration">
-                            <option value="1">1 Day</option>
-                            <option value="2">2 Days</option>
-                            <option value="3">3 Days</option>
-                            <option value="4">4 Days</option>
-                            <option value="5">5 Days</option>
-                            <option value="6">6 Days</option>
-                            <option value="7">7 Days</option>
-                            <option value="14">14 Days</option>
-                            <option value="15">15 Days</option>
-                            <option value="20">20 Days</option>
-                            <option value="30" selected>30 Days</option>
-                            <option value="60">60 Days</option>
-                            <option value="lifetime">Lifetime</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Max Devices</label>
-                        <input type="number" id="maxDevices" value="5" min="1" max="100">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Generate SDK Key</button>
-                </form>
-            </div>
+    <button type="submit" class="btn btn-neon" style="width:100%;justify-content:center;margin-top:12px;font-size:.9rem;padding:12px">&#9889; GENERATE KEY</button>
+  </form>
+</div>
 
-            <div class="panel">
-                <h2>SDK Keys</h2>
-                <div class="keys-list" id="keysList">
-                    <div class="empty-state">
-                        <div class="icon">&#128273;</div>
-                        <div>No keys generated yet</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- KEY TABLE -->
+<div class="glass">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:4px">
+    <h2 style="font-size:1rem;display:flex;align-items:center;gap:8px">&#128203; Generated Keys</h2>
+    <button class="btn btn-danger btn-sm" onclick="clearAll()">Clear All</button>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search keys..." oninput="renderTable()">
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Game</th><th>Key</th><th>Devices</th><th>Duration</th><th>Expires</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="keyTableBody"></tbody>
+    </table>
+    <div class="empty" id="emptyState"><div class="ico">&#128273;</div><div>No keys generated yet</div></div>
+  </div>
+</div>
 
-        <!-- PANEL KEYS VIEW -->
-        <div id="view-panelKeys" style="display:none;">
-            <div class="panel">
-                <h2>Generate Panel Access Key</h2>
-                <form id="panelCreateForm" onsubmit="return createPanelKey(event)">
-                    <div class="form-group">
-                        <label>Label</label>
-                        <input type="text" id="panelLabel" placeholder="e.g. Admin Panel Access" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Duration</label>
-                        <select id="panelDuration">
-                            <option value="1">1 Day</option>
-                            <option value="2">2 Days</option>
-                            <option value="3">3 Days</option>
-                            <option value="4">4 Days</option>
-                            <option value="5">5 Days</option>
-                            <option value="6">6 Days</option>
-                            <option value="7">7 Days</option>
-                            <option value="14">14 Days</option>
-                            <option value="15">15 Days</option>
-                            <option value="20">20 Days</option>
-                            <option value="30" selected>30 Days</option>
-                            <option value="60">60 Days</option>
-                            <option value="lifetime">Lifetime</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Generate Panel Key</button>
-                </form>
-            </div>
-
-            <div class="panel">
-                <h2>Panel Keys</h2>
-                <div class="keys-list" id="panelKeysList">
-                    <div class="empty-state">
-                        <div class="icon">&#128100;</div>
-                        <div>No panel keys yet</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- FOOTER -->
+<div class="footer">&copy; DARK BHAI - All Rights Reserved</div>
 </div>
 
 <script>
-const API_BASE = 'api.php';
-const PANEL_STORAGE = 'panel_keys';
-let currentView = 'sdkKeys';
+const STORAGE='darkbhai_keys';
+let keys=JSON.parse(localStorage.getItem(STORAGE)||'[]');
+const masked={};
 
-// ---------- Sidebar / Navigation ----------
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const isOpen = sidebar.classList.contains('open');
-    sidebar.classList.toggle('open', !isOpen);
-    overlay.classList.toggle('show', !isOpen);
+/* particles */
+(function(){const c=document.getElementById('particles'),ctx=c.getContext('2d');let W,H,ps=[];
+function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+resize();window.addEventListener('resize',resize);
+for(let i=0;i<60;i++)ps.push({x:Math.random()*2000,y:Math.random()*2000,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.3,vy:-Math.random()*0.4-0.1,a:Math.random()*0.4+0.1});
+function draw(){ctx.clearRect(0,0,W,H);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}if(p.x<0)p.x=W;if(p.x>W)p.x=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(139,92,246,${p.a})`;ctx.fill()});requestAnimationFrame(draw)}
+draw()})();
+
+/* countdown */
+(function(){const t=new Date();t.setDate(t.getDate()+30);
+setInterval(()=>{const n=Date.now(),d=t-n;if(d<=0)return;const dd=Math.floor(d/864e5),hh=Math.floor((d%864e5)/36e5),mm=Math.floor((d%36e5)/6e4),ss=Math.floor((d%6e4)/1e3);
+document.getElementById('cdDays').textContent=String(dd).padStart(2,'0');
+document.getElementById('cdHours').textContent=String(hh).padStart(2,'0');
+document.getElementById('cdMins').textContent=String(mm).padStart(2,'0');
+document.getElementById('cdSecs').textContent=String(ss).padStart(2,'0');},1000)})();
+
+function save(){localStorage.setItem(STORAGE,JSON.stringify(keys))}
+
+function genId(){return Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase()}
+
+function durLabel(v){
+  if(v==='lifetime')return 'Lifetime';
+  const n=parseFloat(v);
+  if(n<1){const h=Math.round(n*24);return h+'Hr'}
+  return n+'D';
 }
 
-function switchView(view) {
-    currentView = view;
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.view === view);
-    });
-
-    document.getElementById('view-sdkKeys').style.display = view === 'sdkKeys' ? '' : 'none';
-    document.getElementById('view-panelKeys').style.display = view === 'panelKeys' ? '' : 'none';
-    document.getElementById('sdkStats').style.display = view === 'sdkKeys' ? '' : 'none';
-    document.getElementById('panelStats').style.display = view === 'panelKeys' ? '' : 'none';
-
-    if (view === 'panelKeys') {
-        loadPanelKeys();
-    } else {
-        loadKeys();
-    }
-
-    const overlay = document.getElementById('sidebarOverlay');
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.remove('open');
-    overlay.classList.remove('show');
+function gameClass(g){
+  if(g.includes('PUBG'))return 'tag-pubg';if(g.includes('BGMI'))return 'tag-bgmi';
+  if(g.includes('Free'))return 'tag-ff';return 'tag-global';
 }
 
-function loadCurrentView() {
-    if (currentView === 'panelKeys') loadPanelKeys();
-    else loadKeys();
+function toggleCustomKey(){
+  const on=document.getElementById('fCustomToggle').checked;
+  document.getElementById('customKeyWrap').classList.toggle('show',on);
 }
 
-// ---------- API ----------
-async function apiCall(action, method = 'GET', body = null) {
-    const opts = { method, headers: { 'Content-Type': 'application/json' } };
-    if (body) opts.body = JSON.stringify(body);
-    const res = await fetch(`${API_BASE}?action=${action}`, opts);
-    return res.json();
+function generateKey(e){
+  e.preventDefault();
+  const game=document.getElementById('fGame').value;
+  const devices=parseInt(document.getElementById('fDevices').value)||5;
+  const dur=document.getElementById('fDuration').value;
+  const custom=document.getElementById('fCustomToggle').checked;
+  const customVal=document.getElementById('fCustomKey').value.trim();
+  let key;
+  if(custom&&customVal){key=customVal}else{key='DB-'+genId()}
+  let expires;
+  if(dur==='lifetime'){expires='lifetime'}else{expires=new Date(Date.now()+parseFloat(dur)*864e5).toISOString()}
+  keys.unshift({id:genId(),key,game,devices,duration:dur,expires,created:new Date().toISOString()});
+  save();renderTable();updateStats();
+  toast('Key generated: '+key);
+  document.getElementById('fCustomKey').value='';
 }
 
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+function deleteKey(id){if(!confirm('Delete this key permanently?'))return;keys=keys.filter(k=>k.id!==id);save();renderTable();updateStats();toast('Key deleted')}
+
+function copyKey(k){navigator.clipboard.writeText(k).then(()=>toast('Copied!'))}
+
+function toggleMask(id){masked[id]=!masked[id];renderTable()}
+
+function isExpired(e){if(!e||e==='lifetime')return false;return new Date(e)<new Date()}
+
+function fmtDate(s){if(!s||s==='lifetime')return 'Lifetime';return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+
+function renderTable(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  const filtered=keys.filter(k=>!q||k.key.toLowerCase().includes(q)||k.game.toLowerCase().includes(q));
+  const tbody=document.getElementById('keyTableBody');
+  const empty=document.getElementById('emptyState');
+  if(!filtered.length){tbody.innerHTML='';empty.style.display='';return}
+  empty.style.display='none';
+  tbody.innerHTML=filtered.map((k,i)=>{
+    const exp=isExpired(k.expires);
+    const display=masked[k.id]?'*'.repeat(Math.min(k.key.length,16)):k.key;
+    const maskCls=masked[k.id]?'masked':'';
+    return `<tr style="${exp?'opacity:.45':''}">
+    <td>${i+1}</td>
+    <td><span class="tag ${gameClass(k.game)}">${k.game}</span></td>
+    <td><span class="key-cell ${maskCls}" title="${k.key}">${display}</span></td>
+    <td>${k.devices}</td>
+    <td>${durLabel(k.duration)}</td>
+    <td style="font-size:.75rem;color:${exp?'var(--red)':'var(--text2)'}">${fmtDate(k.expires)}${exp?' &#10060;':''}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-ghost btn-sm" onclick="toggleMask('${k.id}')">&#128065;</button>
+      <button class="btn btn-accent btn-sm" onclick="copyKey('${k.key.replace(/'/g,"\\'")}')">&#128203;</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteKey('${k.id}')">&#128465;</button>
+    </td></tr>`}).join('');
 }
 
-// ---------- SDK Keys (server-backed) ----------
-async function createKey(e) {
-    e.preventDefault();
-    const data = {
-        label: document.getElementById('label').value,
-        duration: document.getElementById('duration').value,
-        max_devices: parseInt(document.getElementById('maxDevices').value)
-    };
-    const res = await apiCall('create', 'POST', data);
-    if (res.status) {
-        showToast('Key generated: ' + res.key.sdk_key);
-        document.getElementById('label').value = '';
-        loadKeys();
-    } else {
-        showToast(res.reason || 'Failed to create key', 'error');
-    }
+function updateStats(){
+  const active=keys.filter(k=>!isExpired(k.expires));
+  const inactive=keys.filter(k=>isExpired(k.expires));
+  const users=new Set(active.map(k=>k.game)).size;
+  document.getElementById('sTotal').textContent=keys.length;
+  document.getElementById('sActive').textContent=active.length;
+  document.getElementById('sInactive').textContent=inactive.length;
+  document.getElementById('sUsers').textContent=users;
 }
 
-async function revokeKey(sdkKey) {
-    if (!confirm('Revoke this key? Devices using it will lose access.')) return;
-    const res = await apiCall('revoke', 'POST', { sdk_key: sdkKey });
-    if (res.status) {
-        showToast('Key revoked');
-        loadKeys();
-    } else {
-        showToast(res.reason || 'Failed to revoke', 'error');
-    }
+function exportKeys(){
+  if(!keys.length){toast('No keys to export',1);return}
+  const csv='#,Game,Key,Devices,Duration,Expires,Created\n'+keys.map((k,i)=>`${i+1},"${k.game}","${k.key}",${k.devices},"${durLabel(k.duration)}","${fmtDate(k.expires)}","${fmtDate(k.created)}"`).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='darkbhai_keys.csv';a.click();
 }
 
-async function deleteKey(sdkKey) {
-    if (!confirm('Permanently delete this key? This cannot be undone.')) return;
-    const res = await apiCall('delete', 'POST', { sdk_key: sdkKey });
-    if (res.status) {
-        showToast('Key deleted');
-        loadKeys();
-    } else {
-        showToast(res.reason || 'Failed to delete', 'error');
-    }
-}
+function clearAll(){if(!confirm('Delete ALL keys?'))return;keys=[];save();renderTable();updateStats();toast('All keys cleared')}
 
-function copyKey(key) {
-    navigator.clipboard.writeText(key).then(() => showToast('Copied to clipboard'));
-}
+function toast(msg,err){const t=document.createElement('div');t.className='toast '+(err?'toast-err':'toast-ok');t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
 
-function isExpired(expiresAt) {
-    if (!expiresAt || expiresAt === 'lifetime') return false;
-    return new Date(expiresAt) < new Date();
-}
-
-function formatDate(dateStr) {
-    if (!dateStr || dateStr === 'lifetime') return 'Lifetime';
-    return new Date(dateStr).toLocaleDateString('en-US', {
-        year: 'numeric', month: 'short', day: 'numeric'
-    });
-}
-
-async function loadKeys() {
-    try {
-        const res = await apiCall('list');
-        if (!res.status) return;
-
-        const keys = res.keys || [];
-        const revoked = res.revoked || [];
-
-        let totalDevices = 0;
-        keys.forEach(k => totalDevices += (k.devices || []).length);
-
-        document.getElementById('totalKeys').textContent = keys.length + revoked.length;
-        document.getElementById('activeKeys').textContent = keys.length;
-        document.getElementById('revokedKeys').textContent = revoked.length;
-        document.getElementById('totalDevices').textContent = totalDevices;
-
-        const container = document.getElementById('keysList');
-        container.innerHTML = '';
-
-        const allEntries = [
-            ...keys.map(k => ({ ...k, isRevoked: false })),
-            ...revoked.map(k => ({ ...k, isRevoked: true }))
-        ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-        if (allEntries.length === 0) {
-            container.innerHTML = '<div class="empty-state"><div class="icon">&#128273;</div><div>No keys generated yet</div></div>';
-            return;
-        }
-
-        allEntries.forEach(entry => {
-            const expired = isExpired(entry.expires_at);
-            let badgeClass = 'badge-active';
-            let badgeText = 'Active';
-            if (entry.isRevoked) { badgeClass = 'badge-revoked'; badgeText = 'Revoked'; }
-            else if (expired) { badgeClass = 'badge-expired'; badgeText = 'Expired'; }
-
-            const div = document.createElement('div');
-            div.className = 'key-entry' + (entry.isRevoked ? ' revoked' : '');
-            div.innerHTML = `
-                <div class="key-header">
-                    <div class="key-label">${escapeHtml(entry.label || 'Unnamed')}</div>
-                    <span class="key-badge ${badgeClass}">${badgeText}</span>
-                </div>
-                <div class="key-details">
-                    <span class="sdk-key">${escapeHtml(entry.sdk_key)}</span>
-                    <span>Expires: ${formatDate(entry.expires_at)}</span>
-                    <span>Devices: ${(entry.devices || []).length} / ${entry.max_devices || 5}</span>
-                    <span>Created: ${formatDate(entry.created_at)}</span>
-                </div>
-                <div class="key-actions">
-                    <button class="btn btn-primary btn-sm" style="width:auto" onclick="copyKey('${escapeHtml(entry.sdk_key)}')">Copy Key</button>
-                    ${!entry.isRevoked && !expired ? `<button class="btn btn-danger btn-sm" onclick="revokeKey('${escapeHtml(entry.sdk_key)}')">Revoke</button>` : ''}
-                    <button class="btn btn-danger btn-sm" onclick="deleteKey('${escapeHtml(entry.sdk_key)}')">Delete</button>
-                </div>
-            `;
-            container.appendChild(div);
-        });
-    } catch (err) {
-        document.getElementById('keysList').innerHTML =
-            '<div class="empty-state"><div class="icon">&#9888;&#65039;</div><div>PHP backend not detected. SDK keys require server side (Vercel) hosting.</div></div>';
-    }
-}
-
-// ---------- Panel Keys (localStorage) ----------
-function getPanelKeys() {
-    try {
-        return JSON.parse(localStorage.getItem(PANEL_STORAGE)) || [];
-    } catch (e) {
-        return [];
-    }
-}
-
-function savePanelKeys(keys) {
-    localStorage.setItem(PANEL_STORAGE, JSON.stringify(keys));
-}
-
-function createPanelKey(e) {
-    e.preventDefault();
-    const label = document.getElementById('panelLabel').value;
-    const duration = document.getElementById('panelDuration').value;
-    const key = 'PNL-' + Array.from(crypto.getRandomValues(new Uint8Array(12)))
-        .map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
-
-    const expiresAt = duration === 'lifetime' ? 'lifetime' : new Date(Date.now() + duration * 86400000).toISOString();
-
-    const entry = {
-        key,
-        label,
-        duration,
-        expires_at: expiresAt,
-        created_at: new Date().toISOString(),
-        revoked: false
-    };
-
-    const keys = getPanelKeys();
-    keys.push(entry);
-    savePanelKeys(keys);
-
-    showToast('Panel key generated: ' + key);
-    document.getElementById('panelLabel').value = '';
-    loadPanelKeys();
-}
-
-function revokePanelKey(key) {
-    if (!confirm('Revoke this panel key? It will no longer be valid.')) return;
-    const keys = getPanelKeys().map(k =>
-        k.key === key ? { ...k, revoked: true, revoked_at: new Date().toISOString() } : k
-    );
-    savePanelKeys(keys);
-    showToast('Panel key revoked');
-    loadPanelKeys();
-}
-
-function deletePanelKey(key) {
-    if (!confirm('Permanently delete this panel key?')) return;
-    const keys = getPanelKeys().filter(k => k.key !== key);
-    savePanelKeys(keys);
-    showToast('Panel key deleted');
-    loadPanelKeys();
-}
-
-function loadPanelKeys() {
-    const keys = getPanelKeys();
-
-    const active = keys.filter(k => !k.revoked && !isExpired(k.expires_at));
-    const lifetime = active.filter(k => k.expires_at === 'lifetime');
-    const expiring = active.filter(k => k.expires_at !== 'lifetime');
-
-    document.getElementById('panelTotal').textContent = keys.length;
-    document.getElementById('panelLifetime').textContent = lifetime.length;
-    document.getElementById('panelExpiring').textContent = expiring.length;
-    document.getElementById('panelActive').textContent = active.length;
-
-    const container = document.getElementById('panelKeysList');
-    container.innerHTML = '';
-
-    if (keys.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="icon">&#128100;</div><div>No panel keys yet</div></div>';
-        return;
-    }
-
-    const sorted = [...keys].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-    sorted.forEach(entry => {
-        const expired = isExpired(entry.expires_at);
-        let badgeClass = 'badge-active';
-        let badgeText = 'Active';
-        if (entry.revoked) { badgeClass = 'badge-revoked'; badgeText = 'Revoked'; }
-        else if (expired) { badgeClass = 'badge-expired'; badgeText = 'Expired'; }
-
-        const div = document.createElement('div');
-        div.className = 'key-entry' + (entry.revoked ? ' revoked' : '');
-        div.innerHTML = `
-            <div class="key-header">
-                <div class="key-label">${escapeHtml(entry.label || 'Unnamed')}</div>
-                <span class="key-badge ${badgeClass}">${badgeText}</span>
-            </div>
-            <div class="key-details">
-                <span class="sdk-key">${escapeHtml(entry.key)}</span>
-                <span>Expires: ${formatDate(entry.expires_at)}</span>
-                <span>Created: ${formatDate(entry.created_at)}</span>
-            </div>
-            <div class="key-actions">
-                <button class="btn btn-primary btn-sm" style="width:auto" onclick="copyKey('${escapeHtml(entry.key)}')">Copy Key</button>
-                ${!entry.revoked && !expired ? `<button class="btn btn-danger btn-sm" onclick="revokePanelKey('${escapeHtml(entry.key)}')">Revoke</button>` : ''}
-                <button class="btn btn-danger btn-sm" onclick="deletePanelKey('${escapeHtml(entry.key)}')">Delete</button>
-            </div>
-        `;
-        container.appendChild(div);
-    });
-}
-
-// ---------- Helpers ----------
-function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
-
-loadKeys();
+renderTable();updateStats();
 </script>
 </body>
 </html>
