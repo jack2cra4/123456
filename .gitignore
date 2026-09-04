@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Android
+build/
+.gradle/
+local.properties
+*.apk
+*.aab
+*.dex
+*.class
+
+# Native build
+.externalNativeBuild/
+.cxx/
+obj/
+bin/
+
+# PHP
+*.log
+
+# Keys (keep database structure, ignore actual secrets if needed)
+# database.json
