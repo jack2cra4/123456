@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DARK BHAI - License Manager</title>
+    <title>DARK OP BHAI - License Manager</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -143,6 +143,22 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
 @keyframes slideIn{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
 
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+
+/* key modal */
+.modal-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--accent);border-radius:var(--radius);padding:32px;max-width:480px;width:90%;text-align:center;box-shadow:0 0 60px var(--accent-glow),0 20px 60px rgba(0,0,0,0.5);transform:scale(0.9);transition:transform .3s}
+.modal-overlay.show .modal{transform:scale(1)}
+.modal .modal-icon{font-size:3rem;margin-bottom:12px}
+.modal h3{font-size:1.2rem;font-weight:700;margin-bottom:8px;color:var(--text)}
+.modal .modal-key{font-family:'Courier New',monospace;font-size:1.1rem;color:var(--neon);background:rgba(0,0,0,0.5);border:1px solid var(--neon-glow);border-radius:8px;padding:14px 18px;margin:16px 0;word-break:break-all;cursor:pointer;transition:border-color .2s}
+.modal .modal-key:hover{border-color:var(--neon)}
+.modal .modal-hint{font-size:.7rem;color:var(--text3);margin-bottom:16px}
+.modal .modal-actions{display:flex;gap:12px;justify-content:center}
+.modal .btn-copy{background:linear-gradient(135deg,var(--green),#059669);color:#fff;padding:10px 28px;font-size:.85rem;font-weight:700;box-shadow:0 4px 16px rgba(16,185,129,0.3)}
+.modal .btn-copy:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(16,185,129,0.4)}
+.modal .btn-close-modal{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--glass-border);padding:10px 20px}
+.modal .btn-close-modal:hover{color:var(--text);border-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -154,7 +170,7 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-head">
     <div class="ico">&#128737;</div>
-    <span>DARK BHAI</span>
+    <span>DARK OP BHAI</span>
     <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
   </div>
   <nav class="sidebar-nav">
@@ -165,7 +181,7 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
       <span class="nav-icon">&#128100;</span> Panel Keys
     </button>
   </nav>
-  <div class="sidebar-foot">DARK BHAI &mdash; All Rights Reserved</div>
+  <div class="sidebar-foot">DARK OP BHAI &mdash; All Rights Reserved</div>
 </aside>
 
 <div class="app">
@@ -175,7 +191,7 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
   <div class="header-left">
     <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
     <div class="brand">
-      <h1>DARK BHAI</h1>
+      <h1>DARK OP BHAI</h1>
       <small>License Management System</small>
     </div>
   </div>
@@ -348,7 +364,22 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
 </div>
 
 <!-- FOOTER -->
-<div class="footer">&copy; DARK BHAI - All Rights Reserved</div>
+<div class="footer">&copy; DARK OP BHAI - All Rights Reserved</div>
+</div>
+
+<!-- KEY MODAL -->
+<div class="modal-overlay" id="keyModal">
+  <div class="modal">
+    <div class="modal-icon">&#128273;</div>
+    <h3>Key Generated Successfully!</h3>
+    <p style="color:var(--text2);font-size:.8rem;margin-bottom:4px">Copy this key now or find it in your keys table</p>
+    <div class="modal-key" id="modalKeyText" onclick="copyModalKey()"></div>
+    <p class="modal-hint">Click the key or the button below to copy</p>
+    <div class="modal-actions">
+      <button class="btn btn-copy" onclick="copyModalKey()">&#128203; Copy Key</button>
+      <button class="btn btn-close-modal" onclick="closeModal()">Close</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -423,10 +454,22 @@ function generateKey(type,e){
   const keys=getKeys(type);
   keys.unshift({id:genId(),key,label,devices,duration:dur,expires,created:new Date().toISOString(),revoked:false});
   save(type);renderTable(type);updateStats();
-  toast('Key generated: '+key);
+  showModal(key);
   if(type==='sdk'){document.getElementById('sdkCustomVal').value=''}
   else{document.getElementById('panelLabel').value='';document.getElementById('panelCustomVal').value=''}
 }
+
+/* modal */
+function showModal(key){
+  document.getElementById('modalKeyText').textContent=key;
+  document.getElementById('keyModal').classList.add('show');
+}
+function closeModal(){document.getElementById('keyModal').classList.remove('show')}
+function copyModalKey(){
+  const key=document.getElementById('modalKeyText').textContent;
+  navigator.clipboard.writeText(key).then(()=>{toast('Copied to clipboard!');closeModal()});
+}
+document.getElementById('keyModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 
 /* revoke */
 function revokeKey(type,id){
