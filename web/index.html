@@ -77,7 +77,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .badge-active::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .balance-card{display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:var(--radius-sm);background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15)}
-.balance-card .amt{font-size:1.1rem;font-weight:800;color:var(--neon)}
+.balance-card .amt{font-size:1.1rem;font-weight:800;color:var(--neon);text-shadow:0 0 12px var(--neon-glow)}
 
 /* stats grid */
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}
@@ -189,8 +189,7 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
   <h2>Welcome back, <span>Admin</span></h2>
   <div class="balance-card">
     <span class="badge badge-active">ACTIVE</span>
-    <span class="amt">$999,999,999</span>
-    <span style="color:var(--text3);font-size:.75rem">/ Unlimited</span>
+    <span class="amt">&#8734; Unlimited</span>
   </div>
 </div>
 
