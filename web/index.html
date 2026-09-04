@@ -133,6 +133,13 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
 .empty{padding:40px;text-align:center;color:var(--text3)}
 .empty .ico{font-size:2.5rem;margin-bottom:12px;opacity:.3}
 
+/* live countdown in table */
+.countdown-live{font-family:'Courier New',monospace;font-size:.78rem;color:var(--neon);white-space:nowrap}
+.countdown-live.expired{color:var(--red)}
+.device-usage{font-size:.75rem;color:var(--text2);white-space:nowrap}
+.device-usage .active{color:var(--green);font-weight:700}
+.device-usage .sep{color:var(--text3);margin:0 2px}
+
 /* footer */
 .footer{text-align:center;padding:32px 0 16px;color:var(--text3);font-size:.7rem;border-top:1px solid var(--glass-border);margin-top:40px}
 
@@ -290,7 +297,7 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>#</th><th>Label</th><th>Key</th><th>Devices</th><th>Duration</th><th>Status</th><th>Actions</th></tr></thead>
+        <thead><tr><th>#</th><th>Label</th><th>Key</th><th>Devices</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="sdkTableBody"></tbody>
       </table>
       <div class="empty" id="sdkEmpty"><div class="ico">&#128273;</div><div>No SDK keys generated yet</div></div>
@@ -360,7 +367,7 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>#</th><th>Label</th><th>Key</th><th>Devices</th><th>Duration</th><th>Status</th><th>Actions</th></tr></thead>
+        <thead><tr><th>#</th><th>Label</th><th>Key</th><th>Devices</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="panelTableBody"></tbody>
       </table>
       <div class="empty" id="panelEmpty"><div class="ico">&#128100;</div><div>No panel keys generated yet</div></div>
@@ -403,7 +410,7 @@ for(let i=0;i<50;i++)ps.push({x:Math.random()*2e3,y:Math.random()*2e3,r:Math.ran
 function draw(){ctx.clearRect(0,0,W,H);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}if(p.x<0)p.x=W;if(p.x>W)p.x=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(139,92,246,${p.a})`;ctx.fill()});requestAnimationFrame(draw)}
 draw()})();
 
-/* countdown */
+/* subscription countdown */
 (function(){const t=new Date();t.setDate(t.getDate()+30);
 setInterval(()=>{const n=Date.now(),d=t-n;if(d<=0)return;
 document.getElementById('cdDays').textContent=String(Math.floor(d/864e5)).padStart(2,'0');
@@ -427,9 +434,21 @@ function setKeys(type,k){if(type==='sdk')sdkKeys=k;else panelKeys=k}
 /* helpers */
 function genId(){return Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase()}
 function durLabel(v){if(v==='lifetime')return 'Lifetime';const n=parseFloat(v);if(n<1)return Math.round(n*24)+'Hr';return n+'D'}
-function isExpired(e){if(!e||e==='lifetime')return false;return new Date(e)<new Date()}
+function isExpired(k){if(k.expires==='lifetime')return false;return new Date(k.expires)<new Date()}
 function fmtDate(s){if(!s||s==='lifetime')return 'Lifetime';return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
 function keyPrefix(type){return type==='sdk'?'SDK-':'PNL-'}
+
+function formatCountdown(expires){
+  if(expires==='lifetime')return '<span style="color:var(--green)">Lifetime</span>';
+  const diff=new Date(expires)-new Date();
+  if(diff<=0)return '<span class="expired">Expired</span>';
+  const d=Math.floor(diff/864e5);
+  const h=Math.floor((diff%864e5)/36e5);
+  const m=Math.floor((diff%36e5)/6e4);
+  const s=Math.floor((diff%6e4)/1e3);
+  if(d>0)return `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
 
 function toggleCustom(type){
   const on=document.getElementById(type+'Custom').checked;
@@ -455,13 +474,14 @@ function generateKey(type,e){
   }
   let key;
   if(custom&&customVal){key=customVal}else{key=keyPrefix(type)+genId()}
+  const now=new Date().toISOString();
   let expires=dur==='lifetime'?'lifetime':new Date(Date.now()+parseFloat(dur)*864e5).toISOString();
   const keys=getKeys(type);
-  keys.unshift({id:genId(),key,label,devices,duration:dur,expires,created:new Date().toISOString(),revoked:false});
+  keys.unshift({id:genId(),key,label,maxDevices:devices,activeDevices:0,duration:dur,expires,createdAt:now,revoked:false});
   save(type);renderTable(type);updateStats();
   showModal(key);
   if(type==='sdk'){document.getElementById('sdkCustomVal').value=''}
-  else{document.getElementById('panelLabel').value='';document.getElementById('panelCustomVal').value=''}
+  else{document.getElementById('panelCustomVal').value=''}
 }
 
 /* modal */
@@ -475,14 +495,6 @@ function copyModalKey(){
   navigator.clipboard.writeText(key).then(()=>{toast('Copied to clipboard!');closeModal()});
 }
 document.getElementById('keyModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
-
-/* revoke */
-function revokeKey(type,id){
-  if(!confirm('Revoke this key?'))return;
-  const keys=getKeys(type);
-  const k=keys.find(x=>x.id===id);if(k)k.revoked=true;
-  save(type);renderTable(type);updateStats();toast('Key revoked');
-}
 
 /* delete */
 function deleteKey(type,id){
@@ -507,33 +519,59 @@ function renderTable(type){
   if(!keys.length){tbody.innerHTML='';empty.style.display='';return}
   empty.style.display='none';
   tbody.innerHTML=keys.map((k,i)=>{
-    const exp=isExpired(k.expires);
+    const exp=isExpired(k);
     const display=masked[k.id]?'*'.repeat(Math.min(k.key.length,16)):k.key;
     const maskCls=masked[k.id]?'masked':'';
+    const maxD=k.maxDevices||k.devices||1;
+    const actD=k.activeDevices||0;
     let statusCls,statusText;
     if(k.revoked){statusCls='tag-revoked';statusText='Revoked'}
     else if(exp){statusCls='tag-expired';statusText='Expired'}
     else{statusCls='tag-active';statusText='Active'}
-    return `<tr style="${(exp||k.revoked)?'opacity:.5':''}">
+    return `<tr data-expires="${k.expires||''}" style="${(exp||k.revoked)?'opacity:.5':''}">
     <td>${i+1}</td>
     <td><span style="font-weight:600">${k.label}</span></td>
     <td><span class="key-cell ${maskCls}" title="${k.key}">${display}</span></td>
-    <td>${k.devices}</td>
-    <td>${durLabel(k.duration)}</td>
+    <td><span class="device-usage"><span class="active">${actD}</span><span class="sep"> / </span>${maxD} Devices</span></td>
+    <td><span class="countdown-live${exp?' expired':''}" data-expires="${k.expires||''}">${formatCountdown(k.expires)}</span></td>
     <td><span class="tag ${statusCls}">${statusText}</span></td>
     <td style="white-space:nowrap">
       <button class="btn btn-ghost btn-sm" onclick="toggleMask('${k.id}')" title="Show/Hide">&#128065;</button>
       <button class="btn btn-accent btn-sm" onclick="copyKey('${k.key.replace(/'/g,"\\'")}')" title="Copy">&#128203;</button>
-      ${(!k.revoked&&!exp)?`<button class="btn btn-revoke btn-sm" onclick="revokeKey('${type}','${k.id}')" title="Revoke">&#128683;</button>`:''}
       <button class="btn btn-danger btn-sm" onclick="deleteKey('${type}','${k.id}')" title="Delete">&#128465;</button>
     </td></tr>`}).join('');
 }
 
+/* live countdown updater */
+setInterval(()=>{
+  document.querySelectorAll('.countdown-live').forEach(el=>{
+    const expires=el.dataset.expires;
+    if(!expires||expires==='lifetime'){el.innerHTML='<span style="color:var(--green)">Lifetime</span>';return}
+    const diff=new Date(expires)-new Date();
+    if(diff<=0){
+      el.innerHTML='<span class="expired">Expired</span>';
+      el.classList.add('expired');
+      const tr=el.closest('tr');
+      if(tr){tr.style.opacity='.5';
+        const statusTag=tr.querySelector('.tag');
+        if(statusTag){statusTag.className='tag tag-expired';statusTag.textContent='Expired'}
+      }
+      return;
+    }
+    const d=Math.floor(diff/864e5);
+    const h=Math.floor((diff%864e5)/36e5);
+    const m=Math.floor((diff%36e5)/6e4);
+    const s=Math.floor((diff%6e4)/1e3);
+    if(d>0)el.textContent=`${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    else el.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  });
+},1000);
+
 /* stats */
 function updateStats(){
   const all=[...sdkKeys,...panelKeys];
-  const active=all.filter(k=>!isExpired(k.expires)&&!k.revoked);
-  const inactive=all.filter(k=>isExpired(k.expires)||k.revoked);
+  const active=all.filter(k=>!isExpired(k)&&!k.revoked);
+  const inactive=all.filter(k=>isExpired(k)||k.revoked);
   const users=new Set(all.map(k=>k.label)).size;
   document.getElementById('sTotal').textContent=all.length;
   document.getElementById('sActive').textContent=active.length;
@@ -545,7 +583,7 @@ function updateStats(){
 function exportKeys(){
   const all=[...sdkKeys.map(k=>({...k,type:'SDK'})),...panelKeys.map(k=>({...k,type:'Panel'}))];
   if(!all.length){toast('No keys to export',1);return}
-  const csv='Type,Label,Key,Devices,Duration,Expires,Created,Revoked\n'+all.map(k=>`"${k.type}","${k.label}","${k.key}",${k.devices},"${durLabel(k.duration)}","${fmtDate(k.expires)}","${fmtDate(k.created)}",${k.revoked}`).join('\n');
+  const csv='Type,Label,Key,MaxDevices,ActiveDevices,Expires,Created,Revoked\n'+all.map(k=>`"${k.type}","${k.label}","${k.key}",${k.maxDevices||k.devices||1},${k.activeDevices||0},"${fmtDate(k.expires)}","${fmtDate(k.createdAt||k.created)}",${k.revoked}`).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='darkbhai_keys.csv';a.click();
 }
 
