@@ -20,44 +20,57 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 
 /* particles */
 #particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
-.particle{position:absolute;border-radius:50%;background:rgba(139,92,246,0.4);animation:float linear infinite}
-@keyframes float{
-  0%{transform:translateY(100vh) scale(0);opacity:0}
-  10%{opacity:1}
-  90%{opacity:1}
-  100%{transform:translateY(-10vh) scale(1);opacity:0}
-}
+
+/* sidebar */
+.sidebar{position:fixed;top:0;left:0;width:280px;height:100vh;background:rgba(10,10,20,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid var(--glass-border);transform:translateX(-100%);transition:transform .3s ease;z-index:1001;display:flex;flex-direction:column}
+.sidebar.open{transform:translateX(0);box-shadow:8px 0 40px rgba(0,0,0,0.6)}
+.sidebar-head{padding:24px 20px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;gap:12px}
+.sidebar-head .ico{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--neon));display:flex;align-items:center;justify-content:center;font-size:18px}
+.sidebar-head span{font-weight:800;font-size:1.1rem;background:linear-gradient(135deg,var(--accent2),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar-close{position:absolute;top:20px;right:16px;background:none;border:none;color:var(--text3);font-size:24px;cursor:pointer;line-height:1}
+.sidebar-close:hover{color:var(--red)}
+.sidebar-nav{padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:var(--text2);text-decoration:none;font-size:.9rem;font-weight:500;transition:all .2s;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.nav-item:hover{background:rgba(139,92,246,0.08);color:var(--text)}
+.nav-item.active{background:linear-gradient(135deg,var(--accent),#7c3aed);color:#fff;box-shadow:0 4px 16px var(--accent-glow)}
+.nav-icon{font-size:1.1rem;width:24px;text-align:center}
+.sidebar-foot{margin-top:auto;padding:16px 20px;border-top:1px solid var(--glass-border);font-size:.65rem;color:var(--text3);text-align:center}
+.sidebar-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity .3s;z-index:1000}
+.sidebar-overlay.show{opacity:1;pointer-events:auto}
 
 .app{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:16px}
 @media(min-width:768px){.app{padding:24px 32px}}
 
 /* glass card */
 .glass{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:var(--radius);padding:24px;transition:border-color .3s,box-shadow .3s}
-.glass:hover{border-color:rgba(139,92,246,0.2);box-shadow:0 0 24px rgba(139,92,246,0.08)}
+.glass:hover{border-color:rgba(139,92,246,0.15);box-shadow:0 0 24px rgba(139,92,246,0.06)}
 
 /* header */
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--glass-border)}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--neon));display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 20px var(--accent-glow)}
-.brand h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 40px var(--neon-glow)}
-.brand small{display:block;font-size:.7rem;color:var(--text3);-webkit-text-fill-color:var(--text3);text-transform:uppercase;letter-spacing:2px}
-.header-right{display:flex;align-items:center;gap:12px}
+.header-left{display:flex;align-items:center;gap:14px}
+.hamburger{background:var(--glass);color:var(--text);border:1px solid var(--glass-border);border-radius:10px;width:42px;height:42px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.hamburger:hover{border-color:var(--accent);color:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+.brand h1{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand small{display:block;font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:2px}
+.header-right{display:flex;align-items:center;gap:10px}
 
 /* buttons */
-.btn{padding:10px 20px;border:none;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.btn{padding:10px 20px;border:none;border-radius:var(--radius-sm);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:8px;font-family:inherit}
 .btn-accent{background:linear-gradient(135deg,var(--accent),#7c3aed);color:#fff;box-shadow:0 4px 16px var(--accent-glow)}
 .btn-accent:hover{transform:translateY(-2px);box-shadow:0 6px 24px var(--accent-glow)}
 .btn-neon{background:linear-gradient(135deg,#0ea5e9,var(--neon));color:#000;font-weight:700;box-shadow:0 4px 16px var(--neon-glow)}
 .btn-neon:hover{transform:translateY(-2px);box-shadow:0 6px 28px var(--neon-glow)}
 .btn-danger{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.25)}
 .btn-danger:hover{background:rgba(239,68,68,0.2)}
+.btn-revoke{background:rgba(245,158,11,0.12);color:var(--yellow);border:1px solid rgba(245,158,11,0.25)}
+.btn-revoke:hover{background:rgba(245,158,11,0.2)}
 .btn-sm{padding:6px 12px;font-size:.75rem}
 .btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--glass-border)}
 .btn-ghost:hover{color:var(--text);border-color:var(--accent)}
 
-/* welcome banner */
+/* welcome */
 .welcome{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:24px}
-.welcome h2{font-size:1.3rem;font-weight:700}
+.welcome h2{font-size:1.2rem;font-weight:700}
 .welcome h2 span{color:var(--accent2)}
 .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
 .badge-active{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.3)}
@@ -89,15 +102,15 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 select option{background:#111;color:var(--text)}
 
 /* toggle */
-.toggle-row{display:flex;align-items:center;gap:12px;margin:16px 0}
-.toggle{position:relative;width:48px;height:26px;cursor:pointer}
+.toggle-row{display:flex;align-items:center;gap:12px;margin:16px 0 8px}
+.toggle{position:relative;width:48px;height:26px;cursor:pointer;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0}
 .toggle .slider{position:absolute;inset:0;background:rgba(255,255,255,0.08);border-radius:26px;transition:.3s}
 .toggle .slider::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#555;border-radius:50%;transition:.3s}
 .toggle input:checked+.slider{background:var(--accent)}
 .toggle input:checked+.slider::before{transform:translateX(22px);background:#fff}
 .toggle-label{font-size:.8rem;color:var(--text2)}
-.custom-key-input{display:none;margin-top:8px}
+.custom-key-input{display:none;margin-bottom:8px}
 .custom-key-input.show{display:block}
 
 /* table */
@@ -106,13 +119,14 @@ table{width:100%;border-collapse:collapse;font-size:.8rem}
 thead th{text-align:left;padding:10px 12px;color:var(--text3);font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--glass-border)}
 tbody td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle}
 tbody tr:hover{background:rgba(139,92,246,0.04)}
-.key-cell{font-family:'Courier New',monospace;color:var(--accent2);font-size:.78rem;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.key-cell{font-family:'Courier New',monospace;color:var(--accent2);font-size:.78rem;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .key-cell.masked{color:var(--text3)}
-.tag{padding:2px 8px;border-radius:8px;font-size:.65rem;font-weight:600}
-.tag-pubg{background:rgba(245,158,11,0.12);color:var(--yellow)}
-.tag-bgmi{background:rgba(236,72,153,0.12);color:var(--pink)}
-.tag-ff{background:rgba(239,68,68,0.12);color:var(--red)}
-.tag-global{background:rgba(0,240,255,0.12);color:var(--neon)}
+.tag{padding:2px 8px;border-radius:8px;font-size:.65rem;font-weight:600;white-space:nowrap}
+.tag-sdk{background:rgba(0,240,255,0.12);color:var(--neon)}
+.tag-panel{background:rgba(236,72,153,0.12);color:var(--pink)}
+.tag-active{background:rgba(16,185,129,0.12);color:var(--green)}
+.tag-expired{background:rgba(239,68,68,0.12);color:var(--red)}
+.tag-revoked{background:rgba(245,158,11,0.12);color:var(--yellow)}
 .search-bar{position:relative;margin-bottom:12px}
 .search-bar input{padding-left:36px}
 .search-bar::before{content:'\1F50D';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.85rem;pointer-events:none}
@@ -135,13 +149,32 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
 
 <canvas id="particles"></canvas>
 
+<!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <div class="ico">&#128737;</div>
+    <span>DARK BHAI</span>
+    <button class="sidebar-close" onclick="toggleSidebar()">&times;</button>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" data-view="sdk" onclick="switchView('sdk')">
+      <span class="nav-icon">&#128273;</span> SDK Keys
+    </button>
+    <button class="nav-item" data-view="panel" onclick="switchView('panel')">
+      <span class="nav-icon">&#128100;</span> Panel Keys
+    </button>
+  </nav>
+  <div class="sidebar-foot">DARK BHAI &mdash; All Rights Reserved</div>
+</aside>
+
 <div class="app">
 
 <!-- HEADER -->
 <div class="header">
-  <div class="brand">
-    <div class="brand-icon">&#128737;</div>
-    <div>
+  <div class="header-left">
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+    <div class="brand">
       <h1>DARK BHAI</h1>
       <small>License Management System</small>
     </div>
@@ -163,22 +196,10 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
 
 <!-- STATS -->
 <div class="stats">
-  <div class="glass stat">
-    <div class="num" id="sTotal" style="color:var(--accent2)">0</div>
-    <div class="lbl">Total Keys</div>
-  </div>
-  <div class="glass stat">
-    <div class="num" id="sActive" style="color:var(--green)">0</div>
-    <div class="lbl">Active Keys</div>
-  </div>
-  <div class="glass stat">
-    <div class="num" id="sInactive" style="color:var(--red)">0</div>
-    <div class="lbl">Inactive Keys</div>
-  </div>
-  <div class="glass stat">
-    <div class="num" id="sUsers" style="color:var(--neon)">0</div>
-    <div class="lbl">Total Users</div>
-  </div>
+  <div class="glass stat"><div class="num" id="sTotal" style="color:var(--accent2)">0</div><div class="lbl">Total Keys</div></div>
+  <div class="glass stat"><div class="num" id="sActive" style="color:var(--green)">0</div><div class="lbl">Active Keys</div></div>
+  <div class="glass stat"><div class="num" id="sInactive" style="color:var(--red)">0</div><div class="lbl">Inactive Keys</div></div>
+  <div class="glass stat"><div class="num" id="sUsers" style="color:var(--neon)">0</div><div class="lbl">Total Users</div></div>
 </div>
 
 <!-- COUNTDOWN -->
@@ -188,79 +209,140 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
   <div class="cd-block"><div class="cd-num" id="cdMins">--</div><div class="cd-lbl">Minutes</div></div>
   <div class="cd-block"><div class="cd-num" id="cdSecs">--</div><div class="cd-lbl">Seconds</div></div>
   <div class="glass" style="flex:2;display:flex;align-items:center;justify-content:center;min-width:180px">
-    <span style="font-size:.8rem;color:var(--text2)">Subscription Status &mdash; <span style="color:var(--green);font-weight:700">ACTIVE</span></span>
+    <span style="font-size:.8rem;color:var(--text2)">Subscription &mdash; <span style="color:var(--green);font-weight:700">ACTIVE</span></span>
   </div>
 </div>
 
-<!-- GENERATOR -->
-<div class="glass" style="margin-bottom:24px">
-  <h2 style="font-size:1rem;margin-bottom:18px;display:flex;align-items:center;gap:8px">&#128273; License Generator</h2>
-  <form id="genForm" onsubmit="return generateKey(event)">
-    <div class="form-row three">
-      <div>
-        <label>Game</label>
-        <select id="fGame">
-          <option value="PUBG Mobile">PUBG Mobile</option>
-          <option value="BGMI">BGMI</option>
-          <option value="Free Fire">Free Fire</option>
-          <option value="Global">Global</option>
-        </select>
-      </div>
-      <div>
-        <label>Max Devices</label>
-        <input type="number" id="fDevices" value="5" min="1" max="100" required>
-      </div>
-      <div>
-        <label>Duration</label>
-        <select id="fDuration">
-          <option value="0.083">2 Hours</option>
-          <option value="0.208">5 Hours</option>
-          <option value="0.5">12 Hours</option>
-          <option value="1">1 Day</option>
-          <option value="3">3 Days</option>
-          <option value="7">7 Days</option>
-          <option value="14">14 Days</option>
-          <option value="15">15 Days</option>
-          <option value="30" selected>30 Days</option>
-          <option value="60">60 Days</option>
-          <option value="lifetime">Lifetime</option>
-        </select>
-      </div>
-    </div>
+<!-- ==================== SDK KEYS VIEW ==================== -->
+<div id="view-sdk">
 
-    <div class="toggle-row">
-      <label class="toggle">
-        <input type="checkbox" id="fCustomToggle" onchange="toggleCustomKey()">
-        <span class="slider"></span>
-      </label>
-      <span class="toggle-label">Custom Key</span>
-    </div>
-    <div class="custom-key-input" id="customKeyWrap">
-      <label>Enter Custom Key</label>
-      <input type="text" id="fCustomKey" placeholder="Type your custom key name...">
-    </div>
+  <!-- SDK GENERATOR -->
+  <div class="glass" style="margin-bottom:24px">
+    <h2 style="font-size:1rem;margin-bottom:18px;display:flex;align-items:center;gap:8px">&#128273; SDK Key Generator</h2>
+    <form onsubmit="return generateKey('sdk',event)">
+      <div class="form-row three">
+        <div>
+          <label>Game</label>
+          <select id="sdkGame">
+            <option value="PUBG Mobile">PUBG Mobile</option>
+            <option value="BGMI">BGMI</option>
+            <option value="Free Fire">Free Fire</option>
+            <option value="Global">Global</option>
+          </select>
+        </div>
+        <div>
+          <label>Max Devices</label>
+          <input type="number" id="sdkDevices" value="1" min="1" max="100" required>
+        </div>
+        <div>
+          <label>Duration</label>
+          <select id="sdkDuration">
+            <option value="0.083">2 Hours</option>
+            <option value="0.208">5 Hours</option>
+            <option value="0.5">12 Hours</option>
+            <option value="1">1 Day</option>
+            <option value="3">3 Days</option>
+            <option value="7">7 Days</option>
+            <option value="14">14 Days</option>
+            <option value="15">15 Days</option>
+            <option value="30" selected>30 Days</option>
+            <option value="60">60 Days</option>
+            <option value="lifetime">Lifetime</option>
+          </select>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label class="toggle"><input type="checkbox" id="sdkCustom" onchange="toggleCustom('sdk')"><span class="slider"></span></label>
+        <span class="toggle-label">Custom Key</span>
+      </div>
+      <div class="custom-key-input" id="sdkCustomWrap">
+        <label>Enter Custom Key</label>
+        <input type="text" id="sdkCustomVal" placeholder="Type your custom key name...">
+      </div>
+      <button type="submit" class="btn btn-neon" style="width:100%;justify-content:center;margin-top:8px;font-size:.9rem;padding:12px">&#9889; GENERATE KEY</button>
+    </form>
+  </div>
 
-    <button type="submit" class="btn btn-neon" style="width:100%;justify-content:center;margin-top:12px;font-size:.9rem;padding:12px">&#9889; GENERATE KEY</button>
-  </form>
+  <!-- SDK TABLE -->
+  <div class="glass">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:4px">
+      <h2 style="font-size:1rem;display:flex;align-items:center;gap:8px">&#128203; SDK Keys</h2>
+      <button class="btn btn-danger btn-sm" onclick="clearAll('sdk')">Clear All</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="sdkSearch" placeholder="Search SDK keys..." oninput="renderTable('sdk')">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Label</th><th>Key</th><th>Devices</th><th>Duration</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="sdkTableBody"></tbody>
+      </table>
+      <div class="empty" id="sdkEmpty"><div class="ico">&#128273;</div><div>No SDK keys generated yet</div></div>
+    </div>
+  </div>
 </div>
 
-<!-- KEY TABLE -->
-<div class="glass">
-  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:4px">
-    <h2 style="font-size:1rem;display:flex;align-items:center;gap:8px">&#128203; Generated Keys</h2>
-    <button class="btn btn-danger btn-sm" onclick="clearAll()">Clear All</button>
+<!-- ==================== PANEL KEYS VIEW ==================== -->
+<div id="view-panel" style="display:none">
+
+  <!-- PANEL GENERATOR -->
+  <div class="glass" style="margin-bottom:24px">
+    <h2 style="font-size:1rem;margin-bottom:18px;display:flex;align-items:center;gap:8px">&#128100; Panel Access Key Generator</h2>
+    <form onsubmit="return generateKey('panel',event)">
+      <div class="form-row three">
+        <div>
+          <label>Label</label>
+          <input type="text" id="panelLabel" placeholder="e.g. Admin Panel Access" required>
+        </div>
+        <div>
+          <label>Max Devices</label>
+          <input type="number" id="panelDevices" value="1" min="1" max="100" required>
+        </div>
+        <div>
+          <label>Duration</label>
+          <select id="panelDuration">
+            <option value="0.083">2 Hours</option>
+            <option value="0.208">5 Hours</option>
+            <option value="0.5">12 Hours</option>
+            <option value="1">1 Day</option>
+            <option value="3">3 Days</option>
+            <option value="7">7 Days</option>
+            <option value="14">14 Days</option>
+            <option value="15">15 Days</option>
+            <option value="30" selected>30 Days</option>
+            <option value="60">60 Days</option>
+            <option value="lifetime">Lifetime</option>
+          </select>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <label class="toggle"><input type="checkbox" id="panelCustom" onchange="toggleCustom('panel')"><span class="slider"></span></label>
+        <span class="toggle-label">Custom Key</span>
+      </div>
+      <div class="custom-key-input" id="panelCustomWrap">
+        <label>Enter Custom Key</label>
+        <input type="text" id="panelCustomVal" placeholder="Type your custom key name...">
+      </div>
+      <button type="submit" class="btn btn-neon" style="width:100%;justify-content:center;margin-top:8px;font-size:.9rem;padding:12px">&#9889; GENERATE KEY</button>
+    </form>
   </div>
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search keys..." oninput="renderTable()">
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr><th>#</th><th>Game</th><th>Key</th><th>Devices</th><th>Duration</th><th>Expires</th><th>Actions</th></tr>
-      </thead>
-      <tbody id="keyTableBody"></tbody>
-    </table>
-    <div class="empty" id="emptyState"><div class="ico">&#128273;</div><div>No keys generated yet</div></div>
+
+  <!-- PANEL TABLE -->
+  <div class="glass">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:4px">
+      <h2 style="font-size:1rem;display:flex;align-items:center;gap:8px">&#128203; Panel Keys</h2>
+      <button class="btn btn-danger btn-sm" onclick="clearAll('panel')">Clear All</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="panelSearch" placeholder="Search panel keys..." oninput="renderTable('panel')">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Label</th><th>Key</th><th>Devices</th><th>Duration</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="panelTableBody"></tbody>
+      </table>
+      <div class="empty" id="panelEmpty"><div class="ico">&#128100;</div><div>No panel keys generated yet</div></div>
+    </div>
   </div>
 </div>
 
@@ -269,120 +351,162 @@ tbody tr:hover{background:rgba(139,92,246,0.04)}
 </div>
 
 <script>
-const STORAGE='darkbhai_keys';
-let keys=JSON.parse(localStorage.getItem(STORAGE)||'[]');
+const STORAGE_SDK='darkbhai_sdk_keys';
+const STORAGE_PANEL='darkbhai_panel_keys';
+let sdkKeys=JSON.parse(localStorage.getItem(STORAGE_SDK)||'[]');
+let panelKeys=JSON.parse(localStorage.getItem(STORAGE_PANEL)||'[]');
 const masked={};
+let currentView='sdk';
 
 /* particles */
 (function(){const c=document.getElementById('particles'),ctx=c.getContext('2d');let W,H,ps=[];
 function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
 resize();window.addEventListener('resize',resize);
-for(let i=0;i<60;i++)ps.push({x:Math.random()*2000,y:Math.random()*2000,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.3,vy:-Math.random()*0.4-0.1,a:Math.random()*0.4+0.1});
+for(let i=0;i<50;i++)ps.push({x:Math.random()*2e3,y:Math.random()*2e3,r:Math.random()*2+.5,vx:(Math.random()-.5)*.3,vy:-Math.random()*.4-.1,a:Math.random()*.4+.1});
 function draw(){ctx.clearRect(0,0,W,H);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}if(p.x<0)p.x=W;if(p.x>W)p.x=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(139,92,246,${p.a})`;ctx.fill()});requestAnimationFrame(draw)}
 draw()})();
 
 /* countdown */
 (function(){const t=new Date();t.setDate(t.getDate()+30);
-setInterval(()=>{const n=Date.now(),d=t-n;if(d<=0)return;const dd=Math.floor(d/864e5),hh=Math.floor((d%864e5)/36e5),mm=Math.floor((d%36e5)/6e4),ss=Math.floor((d%6e4)/1e3);
-document.getElementById('cdDays').textContent=String(dd).padStart(2,'0');
-document.getElementById('cdHours').textContent=String(hh).padStart(2,'0');
-document.getElementById('cdMins').textContent=String(mm).padStart(2,'0');
-document.getElementById('cdSecs').textContent=String(ss).padStart(2,'0');},1000)})();
+setInterval(()=>{const n=Date.now(),d=t-n;if(d<=0)return;
+document.getElementById('cdDays').textContent=String(Math.floor(d/864e5)).padStart(2,'0');
+document.getElementById('cdHours').textContent=String(Math.floor((d%864e5)/36e5)).padStart(2,'0');
+document.getElementById('cdMins').textContent=String(Math.floor((d%36e5)/6e4)).padStart(2,'0');
+document.getElementById('cdSecs').textContent=String(Math.floor((d%6e4)/1e3)).padStart(2,'0')},1000)})();
 
-function save(){localStorage.setItem(STORAGE,JSON.stringify(keys))}
+/* sidebar */
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('show')}
+function switchView(v){currentView=v;document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.view===v));
+document.getElementById('view-sdk').style.display=v==='sdk'?'':'none';
+document.getElementById('view-panel').style.display=v==='panel'?'':'none';
+document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('show');
+renderTable(v)}
 
+/* storage */
+function save(type){localStorage.setItem(type==='sdk'?STORAGE_SDK:STORAGE_PANEL,JSON.stringify(type==='sdk'?sdkKeys:panelKeys))}
+function getKeys(type){return type==='sdk'?sdkKeys:panelKeys}
+function setKeys(type,k){if(type==='sdk')sdkKeys=k;else panelKeys=k}
+
+/* helpers */
 function genId(){return Array.from(crypto.getRandomValues(new Uint8Array(8))).map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase()}
+function durLabel(v){if(v==='lifetime')return 'Lifetime';const n=parseFloat(v);if(n<1)return Math.round(n*24)+'Hr';return n+'D'}
+function isExpired(e){if(!e||e==='lifetime')return false;return new Date(e)<new Date()}
+function fmtDate(s){if(!s||s==='lifetime')return 'Lifetime';return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+function keyPrefix(type){return type==='sdk'?'SDK-':'PNL-'}
 
-function durLabel(v){
-  if(v==='lifetime')return 'Lifetime';
-  const n=parseFloat(v);
-  if(n<1){const h=Math.round(n*24);return h+'Hr'}
-  return n+'D';
+function toggleCustom(type){
+  const on=document.getElementById(type+'Custom').checked;
+  document.getElementById(type+'CustomWrap').classList.toggle('show',on);
 }
 
-function gameClass(g){
-  if(g.includes('PUBG'))return 'tag-pubg';if(g.includes('BGMI'))return 'tag-bgmi';
-  if(g.includes('Free'))return 'tag-ff';return 'tag-global';
-}
-
-function toggleCustomKey(){
-  const on=document.getElementById('fCustomToggle').checked;
-  document.getElementById('customKeyWrap').classList.toggle('show',on);
-}
-
-function generateKey(e){
+/* generate */
+function generateKey(type,e){
   e.preventDefault();
-  const game=document.getElementById('fGame').value;
-  const devices=parseInt(document.getElementById('fDevices').value)||5;
-  const dur=document.getElementById('fDuration').value;
-  const custom=document.getElementById('fCustomToggle').checked;
-  const customVal=document.getElementById('fCustomKey').value.trim();
+  let label,devices,dur,custom,customVal;
+  if(type==='sdk'){
+    label=document.getElementById('sdkGame').value;
+    devices=parseInt(document.getElementById('sdkDevices').value)||1;
+    dur=document.getElementById('sdkDuration').value;
+    custom=document.getElementById('sdkCustom').checked;
+    customVal=document.getElementById('sdkCustomVal').value.trim();
+  }else{
+    label=document.getElementById('panelLabel').value;
+    devices=parseInt(document.getElementById('panelDevices').value)||1;
+    dur=document.getElementById('panelDuration').value;
+    custom=document.getElementById('panelCustom').checked;
+    customVal=document.getElementById('panelCustomVal').value.trim();
+  }
   let key;
-  if(custom&&customVal){key=customVal}else{key='DB-'+genId()}
-  let expires;
-  if(dur==='lifetime'){expires='lifetime'}else{expires=new Date(Date.now()+parseFloat(dur)*864e5).toISOString()}
-  keys.unshift({id:genId(),key,game,devices,duration:dur,expires,created:new Date().toISOString()});
-  save();renderTable();updateStats();
+  if(custom&&customVal){key=customVal}else{key=keyPrefix(type)+genId()}
+  let expires=dur==='lifetime'?'lifetime':new Date(Date.now()+parseFloat(dur)*864e5).toISOString();
+  const keys=getKeys(type);
+  keys.unshift({id:genId(),key,label,devices,duration:dur,expires,created:new Date().toISOString(),revoked:false});
+  save(type);renderTable(type);updateStats();
   toast('Key generated: '+key);
-  document.getElementById('fCustomKey').value='';
+  if(type==='sdk'){document.getElementById('sdkCustomVal').value=''}
+  else{document.getElementById('panelLabel').value='';document.getElementById('panelCustomVal').value=''}
 }
 
-function deleteKey(id){if(!confirm('Delete this key permanently?'))return;keys=keys.filter(k=>k.id!==id);save();renderTable();updateStats();toast('Key deleted')}
+/* revoke */
+function revokeKey(type,id){
+  if(!confirm('Revoke this key?'))return;
+  const keys=getKeys(type);
+  const k=keys.find(x=>x.id===id);if(k)k.revoked=true;
+  save(type);renderTable(type);updateStats();toast('Key revoked');
+}
 
+/* delete */
+function deleteKey(type,id){
+  if(!confirm('Delete this key permanently?'))return;
+  setKeys(type,getKeys(type).filter(k=>k.id!==id));
+  save(type);renderTable(type);updateStats();toast('Key deleted');
+}
+
+/* copy */
 function copyKey(k){navigator.clipboard.writeText(k).then(()=>toast('Copied!'))}
 
-function toggleMask(id){masked[id]=!masked[id];renderTable()}
+/* mask toggle */
+function toggleMask(id){masked[id]=!masked[id];renderTable(currentView)}
 
-function isExpired(e){if(!e||e==='lifetime')return false;return new Date(e)<new Date()}
-
-function fmtDate(s){if(!s||s==='lifetime')return 'Lifetime';return new Date(s).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
-
-function renderTable(){
-  const q=(document.getElementById('searchInput').value||'').toLowerCase();
-  const filtered=keys.filter(k=>!q||k.key.toLowerCase().includes(q)||k.game.toLowerCase().includes(q));
-  const tbody=document.getElementById('keyTableBody');
-  const empty=document.getElementById('emptyState');
-  if(!filtered.length){tbody.innerHTML='';empty.style.display='';return}
+/* render table */
+function renderTable(type){
+  const searchId=type+'Search';
+  const q=(document.getElementById(searchId)?.value||'').toLowerCase();
+  const keys=getKeys(type).filter(k=>!q||k.key.toLowerCase().includes(q)||k.label.toLowerCase().includes(q));
+  const tbody=document.getElementById(type+'TableBody');
+  const empty=document.getElementById(type+'Empty');
+  if(!keys.length){tbody.innerHTML='';empty.style.display='';return}
   empty.style.display='none';
-  tbody.innerHTML=filtered.map((k,i)=>{
+  tbody.innerHTML=keys.map((k,i)=>{
     const exp=isExpired(k.expires);
     const display=masked[k.id]?'*'.repeat(Math.min(k.key.length,16)):k.key;
     const maskCls=masked[k.id]?'masked':'';
-    return `<tr style="${exp?'opacity:.45':''}">
+    let statusCls,statusText;
+    if(k.revoked){statusCls='tag-revoked';statusText='Revoked'}
+    else if(exp){statusCls='tag-expired';statusText='Expired'}
+    else{statusCls='tag-active';statusText='Active'}
+    return `<tr style="${(exp||k.revoked)?'opacity:.5':''}">
     <td>${i+1}</td>
-    <td><span class="tag ${gameClass(k.game)}">${k.game}</span></td>
+    <td><span style="font-weight:600">${k.label}</span></td>
     <td><span class="key-cell ${maskCls}" title="${k.key}">${display}</span></td>
     <td>${k.devices}</td>
     <td>${durLabel(k.duration)}</td>
-    <td style="font-size:.75rem;color:${exp?'var(--red)':'var(--text2)'}">${fmtDate(k.expires)}${exp?' &#10060;':''}</td>
+    <td><span class="tag ${statusCls}">${statusText}</span></td>
     <td style="white-space:nowrap">
-      <button class="btn btn-ghost btn-sm" onclick="toggleMask('${k.id}')">&#128065;</button>
-      <button class="btn btn-accent btn-sm" onclick="copyKey('${k.key.replace(/'/g,"\\'")}')">&#128203;</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteKey('${k.id}')">&#128465;</button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleMask('${k.id}')" title="Show/Hide">&#128065;</button>
+      <button class="btn btn-accent btn-sm" onclick="copyKey('${k.key.replace(/'/g,"\\'")}')" title="Copy">&#128203;</button>
+      ${(!k.revoked&&!exp)?`<button class="btn btn-revoke btn-sm" onclick="revokeKey('${type}','${k.id}')" title="Revoke">&#128683;</button>`:''}
+      <button class="btn btn-danger btn-sm" onclick="deleteKey('${type}','${k.id}')" title="Delete">&#128465;</button>
     </td></tr>`}).join('');
 }
 
+/* stats */
 function updateStats(){
-  const active=keys.filter(k=>!isExpired(k.expires));
-  const inactive=keys.filter(k=>isExpired(k.expires));
-  const users=new Set(active.map(k=>k.game)).size;
-  document.getElementById('sTotal').textContent=keys.length;
+  const all=[...sdkKeys,...panelKeys];
+  const active=all.filter(k=>!isExpired(k.expires)&&!k.revoked);
+  const inactive=all.filter(k=>isExpired(k.expires)||k.revoked);
+  const users=new Set(all.map(k=>k.label)).size;
+  document.getElementById('sTotal').textContent=all.length;
   document.getElementById('sActive').textContent=active.length;
   document.getElementById('sInactive').textContent=inactive.length;
   document.getElementById('sUsers').textContent=users;
 }
 
+/* export */
 function exportKeys(){
-  if(!keys.length){toast('No keys to export',1);return}
-  const csv='#,Game,Key,Devices,Duration,Expires,Created\n'+keys.map((k,i)=>`${i+1},"${k.game}","${k.key}",${k.devices},"${durLabel(k.duration)}","${fmtDate(k.expires)}","${fmtDate(k.created)}"`).join('\n');
+  const all=[...sdkKeys.map(k=>({...k,type:'SDK'})),...panelKeys.map(k=>({...k,type:'Panel'}))];
+  if(!all.length){toast('No keys to export',1);return}
+  const csv='Type,Label,Key,Devices,Duration,Expires,Created,Revoked\n'+all.map(k=>`"${k.type}","${k.label}","${k.key}",${k.devices},"${durLabel(k.duration)}","${fmtDate(k.expires)}","${fmtDate(k.created)}",${k.revoked}`).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='darkbhai_keys.csv';a.click();
 }
 
-function clearAll(){if(!confirm('Delete ALL keys?'))return;keys=[];save();renderTable();updateStats();toast('All keys cleared')}
+/* clear */
+function clearAll(type){if(!confirm('Delete ALL '+type+' keys?'))return;setKeys(type,[]);save(type);renderTable(type);updateStats();toast('All keys cleared')}
 
+/* toast */
 function toast(msg,err){const t=document.createElement('div');t.className='toast '+(err?'toast-err':'toast-ok');t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
 
-renderTable();updateStats();
+renderTable('sdk');renderTable('panel');updateStats();
 </script>
 </body>
 </html>
